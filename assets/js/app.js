@@ -208,9 +208,11 @@
     });
   }
 
-  function setAuthMessage(text) {
+  function setAuthMessage(text, showResend) {
     var node = $('#auth-message');
     if (node) node.textContent = text || '';
+    var resend = $('#resend-confirmation');
+    if (resend) resend.classList.toggle('hidden', !showResend);
   }
 
   function updateUserChip() {
@@ -836,7 +838,14 @@
         password: $('#login-password').value
       });
       setBusy(button, false);
-      if (result.error) { setAuthMessage(errText(result.error)); return; }
+      if (result.error) {
+        if (result.error.code === 'email_not_confirmed' || result.error.message === 'Email not confirmed') {
+          setAuthMessage('Почта ещё не подтверждена. Откройте ссылку из письма Supabase или отправьте его повторно.', true);
+        } else {
+          setAuthMessage(errText(result.error));
+        }
+        return;
+      }
       setAuthMessage('');
     });
 
@@ -858,7 +867,7 @@
         setAuthMessage('');
         handleUser(result.data.session.user);
       } else {
-        setAuthMessage('Аккаунт создан. Подтвердите почту (если включено подтверждение), затем войдите.');
+        setAuthMessage('Аккаунт создан. Если включено подтверждение почты, откройте ссылку из письма Supabase, затем войдите.', true);
         $$('[data-auth-tab]').forEach(function (item) { item.classList.toggle('active', item.dataset.authTab === 'login'); });
         $('#auth-panel-login').classList.remove('hidden');
         $('#auth-panel-register').classList.add('hidden');
@@ -871,6 +880,14 @@
       if (!state.sb) { setAuthMessage('Supabase не настроен.'); return; }
       var result = await state.sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
       setAuthMessage(result.error ? errText(result.error) : 'Ссылка для сброса пароля отправлена на ' + email);
+    });
+
+    $('#resend-confirmation').addEventListener('click', async function () {
+      var email = ($('#login-email').value || $('#register-email').value || '').trim();
+      if (!email) { setAuthMessage('Введите email в поле входа.'); return; }
+      if (!state.sb) { setAuthMessage('Supabase не настроен.'); return; }
+      var result = await state.sb.auth.resend({ type: 'signup', email: email });
+      setAuthMessage(result.error ? errText(result.error) : 'Письмо подтверждения отправлено повторно на ' + email);
     });
 
     $('#sign-out').addEventListener('click', async function () {
