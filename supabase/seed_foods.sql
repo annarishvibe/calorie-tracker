@@ -43,7 +43,7 @@ values
 ('Клубника','Фрукты и ягоды',32,0.7,0.3,7.5,100),
 ('Малина','Фрукты и ягоды',52,0.8,0.6,11.9,100),
 ('Голубика','Фрукты и ягоды',57,0.7,0.3,14.5,100)
-on conflict (name, category) do nothing;
+on conflict do nothing;
 
 insert into public.foods (name, category, kcal, protein, fat, carbs, serving_g)
 values
@@ -87,7 +87,7 @@ values
 ('Треска','Рыба и морепродукты',82,18,0.7,0,100),
 ('Хек','Рыба и морепродукты',86,18,1.3,0,100),
 ('Судак','Рыба и морепродукты',84,18,0.9,0,100)
-on conflict (name, category) do nothing;
+on conflict do nothing;
 
 insert into public.foods (name, category, kcal, protein, fat, carbs, serving_g)
 values
@@ -131,7 +131,7 @@ values
 ('Перловка','Крупы и злаки',314,10,1.2,69,100),
 ('Пшёнка','Крупы и злаки',351,11.5,4.2,66,100),
 ('Макароны','Крупы и злаки',350,12,1.5,72,100)
-on conflict (name, category) do nothing;
+on conflict do nothing;
 
 insert into public.foods (name, category, kcal, protein, fat, carbs, serving_g)
 values
@@ -175,7 +175,7 @@ values
 ('Кекс','Хлеб и выпечка',370,7,15,52,100),
 ('Вода','Напитки',0,0,0,0,1000),
 ('Чай зелёный','Напитки',1,0,0,0.2,1000)
-on conflict (name, category) do nothing;
+on conflict do nothing;
 
 insert into public.foods (name, category, kcal, protein, fat, carbs, serving_g)
 values
@@ -219,7 +219,7 @@ values
 ('Гуляш говяжий','Готовые блюда',180,14,10,8,200),
 ('Запеканка творожная','Готовые блюда',160,12,8,12,200),
 ('Сырники','Готовые блюда',220,12,10,20,150)
-on conflict (name, category) do nothing;
+on conflict do nothing;
 
 insert into public.foods (name, category, kcal, protein, fat, carbs, serving_g)
 values
@@ -255,6 +255,6 @@ values
 ('Сэндвич с индейкой','Фастфуд',180,12,6,20,150),
 ('Попкорн','Фастфуд',387,12,4.5,78,100),
 ('Чипсы картофельные','Фастфуд',536,6.5,35,53,100)
-on conflict (name, category) do nothing;
+on conflict do nothing;
 
 select count(*) as seeded_foods from public.foods where is_custom = false;
